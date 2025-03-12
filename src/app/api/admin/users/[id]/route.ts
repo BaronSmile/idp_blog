@@ -5,13 +5,9 @@ import { verifyToken, getTokenFromHeader } from '@/lib/jwt';
 
 export const runtime = 'nodejs';
 
-type Params = {
-  id: string;
-};
-
 export async function GET(
   request: NextRequest,
-  context: { params: Params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -47,7 +43,7 @@ export async function GET(
 
     await connectDB();
 
-    const user = await User.findById(context.params.id);
+    const user = await User.findById(params.id);
 
     if (!user) {
       return NextResponse.json(
@@ -69,7 +65,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: Params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -106,7 +102,7 @@ export async function PUT(
     await connectDB();
 
     const { name, email, password } = await request.json();
-    const user = await User.findById(context.params.id);
+    const user = await User.findById(params.id);
 
     if (!user) {
       return NextResponse.json(
@@ -116,7 +112,7 @@ export async function PUT(
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-      context.params.id,
+      params.id,
       { name, email, password }
     );
 
@@ -134,7 +130,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Params }
+  { params }: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -170,14 +166,14 @@ export async function DELETE(
 
     await connectDB();
 
-    if (context.params.id === payload.userId) {
+    if (params.id === payload.userId) {
       return NextResponse.json(
         { error: 'Вы не можете удалить свою учетную запись' },
         { status: 400 }
       );
     }
 
-    const deletedUser = await User.findByIdAndDelete(context.params.id);
+    const deletedUser = await User.findByIdAndDelete(params.id);
 
     if (!deletedUser) {
       return NextResponse.json(
