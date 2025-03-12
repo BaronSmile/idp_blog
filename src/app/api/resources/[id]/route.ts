@@ -5,15 +5,9 @@ import Resource from '@/models/Resource';
 
 export const runtime = 'nodejs';
 
-type RouteParams = {
-  params: {
-    id: string;
-  };
-};
-
 export async function GET(
   request: NextRequest,
-  context: RouteParams
+  { params }: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -42,7 +36,7 @@ export async function GET(
 
     await connectDB();
 
-    const resource = await Resource.findById(context.params.id);
+    const resource = await Resource.findById(params.id);
 
     if (!resource) {
       return NextResponse.json(
@@ -63,7 +57,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: RouteParams
+  { params }: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -92,7 +86,7 @@ export async function PUT(
 
     await connectDB();
 
-    const resource = await Resource.findById(context.params.id);
+    const resource = await Resource.findById(params.id);
 
     if (!resource) {
       return NextResponse.json(
@@ -111,7 +105,7 @@ export async function PUT(
     const { title, description } = await request.json();
 
     const updatedResource = await Resource.findByIdAndUpdate(
-      context.params.id,
+      params.id,
       { title, description }
     );
 
@@ -129,7 +123,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: RouteParams
+  { params }: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -158,7 +152,7 @@ export async function DELETE(
 
     await connectDB();
 
-    const resource = await Resource.findById(context.params.id);
+    const resource = await Resource.findById(params.id);
 
     if (!resource) {
       return NextResponse.json(
@@ -174,7 +168,7 @@ export async function DELETE(
       );
     }
 
-    await Resource.findByIdAndDelete(context.params.id);
+    await Resource.findByIdAndDelete(params.id);
 
     return NextResponse.json({
       message: 'Ресурс успешно удален',
