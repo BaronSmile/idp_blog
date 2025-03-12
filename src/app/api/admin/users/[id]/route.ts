@@ -6,8 +6,8 @@ import { verifyToken, getTokenFromHeader } from '@/lib/jwt';
 export const runtime = 'nodejs';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -43,7 +43,7 @@ export async function GET(
 
     await connectDB();
 
-    const user = await User.findById(params.id);
+    const user = await User.findById(context.params.id);
 
     if (!user) {
       return NextResponse.json(
@@ -64,8 +64,8 @@ export async function GET(
 }
 
 export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -102,7 +102,7 @@ export async function PUT(
     await connectDB();
 
     const { name, email, password } = await request.json();
-    const user = await User.findById(params.id);
+    const user = await User.findById(context.params.id);
 
     if (!user) {
       return NextResponse.json(
@@ -112,7 +112,7 @@ export async function PUT(
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-      params.id,
+      context.params.id,
       { name, email, password }
     );
 
@@ -129,8 +129,8 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -166,14 +166,14 @@ export async function DELETE(
 
     await connectDB();
 
-    if (params.id === payload.userId) {
+    if (context.params.id === payload.userId) {
       return NextResponse.json(
         { error: 'Вы не можете удалить свою учетную запись' },
         { status: 400 }
       );
     }
 
-    const deletedUser = await User.findByIdAndDelete(params.id);
+    const deletedUser = await User.findByIdAndDelete(context.params.id);
 
     if (!deletedUser) {
       return NextResponse.json(
