@@ -3,6 +3,8 @@ import connectDB from '@/lib/db';
 import User from '@/models/User';
 import { verifyToken, getTokenFromHeader } from '@/lib/jwt';
 
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization');

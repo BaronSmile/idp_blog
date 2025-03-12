@@ -3,6 +3,8 @@ import connectDB from '@/lib/db';
 import User from '@/models/User';
 import { verifyToken, getTokenFromHeader } from '@/lib/jwt';
 
+export const runtime = 'nodejs';
+
 async function checkAdminAuth(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
   if (!authHeader) {

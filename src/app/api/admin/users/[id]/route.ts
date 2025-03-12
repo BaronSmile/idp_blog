@@ -3,9 +3,17 @@ import connectDB from '@/lib/db';
 import User from '@/models/User';
 import { verifyToken, getTokenFromHeader } from '@/lib/jwt';
 
+export const runtime = 'nodejs';
+
+type RouteParams = {
+  params: {
+    id: string;
+  };
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteParams
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -41,7 +49,7 @@ export async function GET(
 
     await connectDB();
 
-    const user = await User.findById(params.id);
+    const user = await User.findById(context.params.id);
 
     if (!user) {
       return NextResponse.json(
@@ -63,7 +71,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteParams
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -99,25 +107,24 @@ export async function PUT(
 
     await connectDB();
 
-    const { name, email, role } = await request.json();
+    const { name, email, password } = await request.json();
+    const user = await User.findById(context.params.id);
 
-    const updatedUser = await User.findByIdAndUpdate(
-      params.id,
-      { name, email, role }
-    );
-
-    if (!updatedUser) {
+    if (!user) {
       return NextResponse.json(
         { error: 'Пользователь не найден' },
         { status: 404 }
       );
     }
 
-    const { password, ...userWithoutPassword } = updatedUser;
+    const updatedUser = await User.findByIdAndUpdate(
+      context.params.id,
+      { name, email, password }
+    );
 
     return NextResponse.json({
       message: 'Пользователь успешно обновлен',
-      user: userWithoutPassword,
+      user: updatedUser,
     });
   } catch (error: any) {
     return NextResponse.json(
@@ -129,7 +136,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteParams
 ) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -165,14 +172,14 @@ export async function DELETE(
 
     await connectDB();
 
-    if (params.id === payload.userId) {
+    if (context.params.id === payload.userId) {
       return NextResponse.json(
         { error: 'Вы не можете удалить свою учетную запись' },
         { status: 400 }
       );
     }
 
-    const deletedUser = await User.findByIdAndDelete(params.id);
+    const deletedUser = await User.findByIdAndDelete(context.params.id);
 
     if (!deletedUser) {
       return NextResponse.json(
