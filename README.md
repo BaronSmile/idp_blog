@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blog Next.js
 
-## Getting Started
+## Особенности
 
-First, run the development server:
+- **Авторизация и аутентификация**
+- **Разделение ролей**
+- **REST API**: GET, POST, PUT, DELETE.
+- **Современный стек**: Next.js, TypeScript, Styled Components
+- **Локальное хранилище**: Использование localStorage для хранения данных без настройки базы данных.
+
+## Технологии
+
+- [Next.js](https://nextjs.org/) - React фреймворк с серверным рендерингом
+- [TypeScript](https://www.typescriptlang.org/) - Типизированный JavaScript
+- [Styled Components](https://styled-components.com/) - CSS-in-JS библиотека
+- [JWT](https://jwt.io/) - JSON Web Tokens для аутентификации
+- [bcryptjs](https://github.com/dcodeIO/bcrypt.js) - Хеширование паролей
+- [localStorage](https://developer.mozilla.org/ru/docs/Web/API/Window/localStorage) - Хранение данных в браузере
+
+## Начало работы
+
+### Предварительные требования
+
+- Node.js (версия 14.x или выше)
+
+### Установка
+
+1. Клонируйте репозиторий:
+
+```bash
+git clone https://github.com/BaronSmile/idp_blog.git
+cd idp_blog
+```
+
+2. Установите зависимости:
+
+```bash
+npm install
+```
+
+3. Создайте файл `.env.local` в корне проекта и добавьте следующие переменные окружения:
+
+```
+JWT_SECRET=your-super-secret-key-change-this-in-production
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+4. Запустите проект в режиме разработки:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Откройте [http://localhost:3000](http://localhost:3000) в вашем браузере.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Учетные данные по умолчанию
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+В системе автоматически создается администратор с следующими учетными данными:
 
-## Learn More
+- Email: admin@mail.ru
+- Пароль: admin123
 
-To learn more about Next.js, take a look at the following resources:
+## API Endpoints
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Аутентификация
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `POST /api/auth/register` - Регистрация нового пользователя
+- `POST /api/auth/login` - Вход пользователя
+- `GET /api/auth/me` - Получение информации о текущем пользователе
 
-## Deploy on Vercel
+### Ресурсы
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `GET /api/resources` - Получение всех ресурсов
+- `POST /api/resources` - Создание нового ресурса
+- `GET /api/resources/:id` - Получение конкретного ресурса
+- `PUT /api/resources/:id` - Обновление ресурса
+- `DELETE /api/resources/:id` - Удаление ресурса
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Администрирование
+
+- `GET /api/admin/users` - Получение всех пользователей (только для админов)
+- `POST /api/admin/users` - Создание нового пользователя (только для админов)
+- `GET /api/admin/users/:id` - Получение конкретного пользователя (только для админов)
+- `PUT /api/admin/users/:id` - Обновление пользователя (только для админов)
+- `DELETE /api/admin/users/:id` - Удаление пользователя (только для админов)
+
