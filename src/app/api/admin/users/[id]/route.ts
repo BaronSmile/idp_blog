@@ -5,10 +5,10 @@ import { verifyToken, getTokenFromHeader } from '@/lib/jwt';
 
 export const runtime = 'nodejs';
 
-// Используем новый формат параметров для Next.js 15
-type Params = { params: { id: string } };
-
-export async function GET(request: NextRequest, { params }: Params) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader) {
@@ -63,7 +63,10 @@ export async function GET(request: NextRequest, { params }: Params) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: Params) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader) {
@@ -125,7 +128,10 @@ export async function PUT(request: NextRequest, { params }: Params) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader) {
